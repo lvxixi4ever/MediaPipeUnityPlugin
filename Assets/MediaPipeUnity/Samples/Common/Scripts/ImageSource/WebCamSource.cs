@@ -228,7 +228,7 @@ namespace Mediapipe.Unity
       webCamTexture = null;
     }
 
-    public override Texture GetCurrentTexture() => webCamTexture;
+    public override Texture GetCurrentTexture() => webCamTexture;//摄像头捕捉到的图片的类型
 
     private ResolutionStruct GetDefaultResolution()
     {

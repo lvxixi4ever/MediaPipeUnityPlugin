@@ -79,6 +79,7 @@ namespace Mediapipe.Unity.Sample
 
       if (bootstrapObj == null)
       {
+
         Debug.Log("Initializing the Bootstrap GameObject");
         bootstrapObj = Instantiate(_bootstrapPrefab);
         bootstrapObj.name = _BootstrapName;

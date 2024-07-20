@@ -119,7 +119,7 @@ namespace Mediapipe.Unity.Sample
 
       Debug.Log($"Config Type = {configType}");
       Debug.Log($"Running Mode = {runningMode}");
-
+      Debug.Log("================================");//√ª‘À––
       InitializeCalculatorGraph();
       _stopwatch = new Stopwatch();
       _stopwatch.Start();
@@ -371,6 +371,7 @@ namespace Mediapipe.Unity.Sample
 
     protected void InitializeCalculatorGraph()
     {
+      Debug.Log("=====================");
       calculatorGraph = new CalculatorGraph();
       _NameTable.Add(calculatorGraph.mpPtr, GetInstanceID());
 
@@ -408,7 +409,8 @@ namespace Mediapipe.Unity.Sample
     /// </param>
     protected virtual void ConfigureCalculatorGraph(CalculatorGraphConfig config)
     {
-      calculatorGraph.Initialize(config);
+        Debug.Log("=====================");
+        calculatorGraph.Initialize(config);
     }
 
     protected void SetImageTransformationOptions(PacketMap sidePacket, ImageSource imageSource, bool expectedToBeMirrored = false)

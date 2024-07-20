@@ -26,7 +26,7 @@ namespace Mediapipe.Unity
 
     protected void UpdateCurrentTarget(FaceLandmarkerResult newTarget)
     {
-      if (IsTargetChanged(newTarget, _currentTarget))
+      if (IsTargetChanged(newTarget, _currentTarget))//******
       {
         newTarget.CloneTo(ref _currentTarget);
         isStale = true;

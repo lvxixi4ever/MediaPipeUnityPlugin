@@ -4,9 +4,9 @@
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
 
-using Mediapipe.Tasks.Vision.FaceLandmarker;
+using Mediapipe.Tasks.Vision.FaceLandmarker;//在packages Tasks里面
 
-namespace Mediapipe.Unity.Sample.FaceLandmarkDetection
+namespace Mediapipe.Unity.Sample.FaceLandmarkDetection//Assets Tasks里面
 {
   public class FaceLandmarkDetectionConfig
   {
@@ -17,8 +17,8 @@ namespace Mediapipe.Unity.Sample.FaceLandmarkDetection
     Tasks.Core.BaseOptions.Delegate.GPU;
 #endif
 
-    public Tasks.Vision.Core.RunningMode RunningMode { get; set; } = Tasks.Vision.Core.RunningMode.LIVE_STREAM;
-
+    //public Tasks.Vision.Core.RunningMode RunningMode { get; set; } = Tasks.Vision.Core.RunningMode.LIVE_STREAM;
+    public Tasks.Vision.Core.RunningMode RunningMode { get; set; } = Tasks.Vision.Core.RunningMode.IMAGE;
     public int NumFaces { get; set; } = 1;
     public float MinFaceDetectionConfidence { get; set; } = 0.5f;
     public float MinFacePresenceConfidence { get; set; } = 0.5f;
@@ -26,6 +26,8 @@ namespace Mediapipe.Unity.Sample.FaceLandmarkDetection
     public bool OutputFaceBlendshapes { get; set; } = true;
     public bool OutputFacialTransformationMatrixes { get; set; } = true;
     public string ModelPath => OutputFaceBlendshapes ? "face_landmarker_v2_with_blendshapes.bytes" : "face_landmarker_v2.bytes";
+        
+    //public string ModelPath = "mobilenet.bytes";
 
     public FaceLandmarkerOptions GetFaceLandmarkerOptions(FaceLandmarkerOptions.ResultCallback resultCallback = null)
     {

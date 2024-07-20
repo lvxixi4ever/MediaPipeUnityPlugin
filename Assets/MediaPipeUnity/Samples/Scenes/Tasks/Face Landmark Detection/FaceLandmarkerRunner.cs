@@ -7,10 +7,10 @@
 using System.Collections;
 using UnityEngine;
 
-using Mediapipe.Tasks.Vision.FaceLandmarker;
+using Mediapipe.Tasks.Vision.FaceLandmarker;//在packages Tasks里面
 using UnityEngine.Rendering;
 
-namespace Mediapipe.Unity.Sample.FaceLandmarkDetection
+namespace Mediapipe.Unity.Sample.FaceLandmarkDetection//Assets Tasks里面
 {
   public class FaceLandmarkerRunner : VisionTaskApiRunner<FaceLandmarker>
   {
@@ -40,10 +40,11 @@ namespace Mediapipe.Unity.Sample.FaceLandmarkDetection
 
       yield return AssetLoader.PrepareAssetAsync(config.ModelPath);
 
-      var options = config.GetFaceLandmarkerOptions(config.RunningMode == Tasks.Vision.Core.RunningMode.LIVE_STREAM ? OnFaceLandmarkDetectionOutput : null);
+      var options = config.GetFaceLandmarkerOptions(config.RunningMode == Tasks.Vision.Core.RunningMode.LIVE_STREAM ? OnFaceLandmarkDetectionOutput : null);//设置回调函数
       taskApi = FaceLandmarker.CreateFromOptions(options);
-      var imageSource = ImageSourceProvider.ImageSource;
-
+ 
+      var imageSource = ImageSourceProvider.ImageSource;//摄像头的话返回的是WebCamSource实例
+      //管理并提供不同类型的图像源,这些图像源可以是网络摄像头（WebCamSource）、静态图片（StaticImageSource）或者视频文件（VideoSource）
       yield return imageSource.Play();
 
       if (!imageSource.isPrepared)
@@ -67,7 +68,7 @@ namespace Mediapipe.Unity.Sample.FaceLandmarkDetection
       var imageProcessingOptions = new Tasks.Vision.Core.ImageProcessingOptions(rotationDegrees: (int)transformationOptions.rotationAngle);
 
       AsyncGPUReadbackRequest req = default;
-      var waitUntilReqDone = new WaitUntil(() => req.done);
+      var waitUntilReqDone = new WaitUntil(() => req.done);//() => req.done
       var result = FaceLandmarkerResult.Alloc(options.numFaces);
 
       while (true)
@@ -77,15 +78,15 @@ namespace Mediapipe.Unity.Sample.FaceLandmarkDetection
           yield return new WaitWhile(() => isPaused);
         }
 
-        if (!_textureFramePool.TryGetTextureFrame(out var textureFrame))
-        {
+        if (!_textureFramePool.TryGetTextureFrame(out var textureFrame))//从池中获取一个空闲的TextureFrame，并将WebCamSource的当前帧复制到这个TextureFrame中
+                {
           yield return new WaitForEndOfFrame();
           continue;
         }
 
-        // Copy current image to TextureFrame
-        req = textureFrame.ReadTextureAsync(imageSource.GetCurrentTexture(), flipHorizontally, flipVertically);
-        yield return waitUntilReqDone;
+        // Copy current image to TextureFrame，还有从GPU读取图片等操作
+        req = textureFrame.ReadTextureAsync(imageSource.GetCurrentTexture(), flipHorizontally, flipVertically);//imageSource.GetCurrentTexture()返回webCamTexture类实例，获取当前帧
+           yield return waitUntilReqDone;
 
         if (req.hasError)
         {
@@ -93,7 +94,7 @@ namespace Mediapipe.Unity.Sample.FaceLandmarkDetection
           break;
         }
 
-        var image = textureFrame.BuildCPUImage();
+        var image = textureFrame.BuildCPUImage();//构建CPUImage对象，包含了具体的图像数据
         switch (taskApi.runningMode)
         {
           case Tasks.Vision.Core.RunningMode.IMAGE:
@@ -127,6 +128,7 @@ namespace Mediapipe.Unity.Sample.FaceLandmarkDetection
 
     private void OnFaceLandmarkDetectionOutput(FaceLandmarkerResult result, Image image, long timestamp)
     {
+      Debug.Log("进入回调函数");
       _faceLandmarkerResultAnnotationController.DrawLater(result);
     }
   }

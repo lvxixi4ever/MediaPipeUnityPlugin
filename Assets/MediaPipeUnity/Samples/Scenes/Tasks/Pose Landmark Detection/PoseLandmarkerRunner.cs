@@ -65,10 +65,7 @@ namespace Mediapipe.Unity.Sample.PoseLandmarkDetection
       var transformationOptions = imageSource.GetTransformationOptions();
       var flipHorizontally = transformationOptions.flipHorizontally;
       var flipVertically = transformationOptions.flipVertically;
-
-      // Always setting rotationDegrees to 0 to avoid the issue that the detection becomes unstable when the input image is rotated.
-      // https://github.com/homuler/MediaPipeUnityPlugin/issues/1196
-      var imageProcessingOptions = new Tasks.Vision.Core.ImageProcessingOptions(rotationDegrees: 0);
+      var imageProcessingOptions = new Tasks.Vision.Core.ImageProcessingOptions(rotationDegrees: (int)transformationOptions.rotationAngle);
 
       AsyncGPUReadbackRequest req = default;
       var waitUntilReqDone = new WaitUntil(() => req.done);

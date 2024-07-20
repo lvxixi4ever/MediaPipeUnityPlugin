@@ -7,7 +7,7 @@
 using System.Collections.Generic;
 using Mediapipe.Tasks.Components.Containers;
 
-namespace Mediapipe.Tasks.Vision.FaceLandmarker
+namespace Mediapipe.Tasks.Vision.FaceLandmarker//Packages FaceLandMarker里
 {
   public sealed class FaceLandmarker : Core.BaseVisionTaskApi
   {
@@ -152,7 +152,7 @@ namespace Mediapipe.Tasks.Vision.FaceLandmarker
       packetMap.Emplace(_IMAGE_IN_STREAM_NAME, Packet.CreateImage(image));
       packetMap.Emplace(_NORM_RECT_STREAM_NAME, Packet.CreateProto(_normalizedRect));
 
-      return ProcessImageData(packetMap);
+      return ProcessImageData(packetMap);//推理函数，最后还是调的C++
     }
 
     /// <summary>
@@ -224,14 +224,14 @@ namespace Mediapipe.Tasks.Vision.FaceLandmarker
     ///   input image.
     /// </summary>
     public void DetectAsync(Image image, long timestampMillisec, Core.ImageProcessingOptions? imageProcessingOptions = null)
-    {
+    {//准备图像和时间戳数据
       ConfigureNormalizedRect(_normalizedRect, imageProcessingOptions, image, roiAllowed: false);
       var timestampMicrosec = timestampMillisec * _MICRO_SECONDS_PER_MILLISECOND;
 
       var packetMap = new PacketMap();
       packetMap.Emplace(_IMAGE_IN_STREAM_NAME, Packet.CreateImageAt(image, timestampMicrosec));
       packetMap.Emplace(_NORM_RECT_STREAM_NAME, Packet.CreateProtoAt(_normalizedRect, timestampMicrosec));
-
+     //将PacketMap发送到MediaPipe的计算图中。
       SendLiveStreamData(packetMap);
     }
 
@@ -248,7 +248,8 @@ namespace Mediapipe.Tasks.Vision.FaceLandmarker
       }
 
       var faceLandmarkerResult = FaceLandmarkerResult.Alloc(options.numFaces, options.outputFaceBlendshapes, options.outputFaceTransformationMatrixes);
-
+        
+      //TryBuildFaceLandmarkerResult方法会从outputPackets中提取landmark、blendshape等信息，并保存在faceLandmarkerResult对象中。然后通过回调函数resultCallback传递给用户进行后续处理。
       return (PacketMap outputPackets) =>
       {
         var outImagePacket = outputPackets.At<Image>(_IMAGE_OUT_STREAM_NAME);
@@ -271,6 +272,13 @@ namespace Mediapipe.Tasks.Vision.FaceLandmarker
       };
     }
 
+
+
+
+
+
+
+
     private static void GetFaceGeometryList(Packet<List<FaceGeometry.Proto.FaceGeometry>> packet, List<FaceGeometry.Proto.FaceGeometry> outs)
     {
       foreach (var geometry in outs)
@@ -285,7 +293,7 @@ namespace Mediapipe.Tasks.Vision.FaceLandmarker
     private static bool TryBuildFaceLandmarkerResult(PacketMap outputPackets,
         List<FaceGeometry.Proto.FaceGeometry> faceGeometriesForRead,
         ref FaceLandmarkerResult result)
-    {
+    { //此函数已经在处理结果
       using var faceLandmarksPacket = outputPackets.At<List<NormalizedLandmarks>>(_NORM_LANDMARKS_STREAM_NAME);
       if (faceLandmarksPacket.IsEmpty())
       {

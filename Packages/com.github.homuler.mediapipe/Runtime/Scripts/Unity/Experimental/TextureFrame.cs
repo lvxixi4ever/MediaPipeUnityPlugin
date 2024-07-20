@@ -162,12 +162,14 @@ namespace Mediapipe.Unity.Experimental
         offset.y = 1.0f;
       }
       Graphics.Blit(src, _tmpRenderTexture, scale, offset);
+      //通过 Graphics.Blit 方法将 src 纹理（当前帧）复制到临时渲染纹理 _tmpRenderTexture，并根据 flipHorizontally 和 flipVertically 参数决定是否翻转。
+      //构建 CPU 图像的 BuildCPUImage 方法使用从 GPU 读取的临时渲染纹理的数据
       RenderTexture.active = currentRenderTexture;
 
-      return AsyncGPUReadback.Request(_tmpRenderTexture, 0, _onReadBackRenderTexture);
+      return AsyncGPUReadback.Request(_tmpRenderTexture, 0, _onReadBackRenderTexture);//请求结束后，执行回调函数_onReadBackRenderTexture
     }
 
-    private readonly Action<AsyncGPUReadbackRequest> _onReadBackRenderTexture;
+    private readonly Action<AsyncGPUReadbackRequest> _onReadBackRenderTexture;//回调函数
     private void OnReadBackRenderTexture(AsyncGPUReadbackRequest req)
     {
       if (_texture == null)
