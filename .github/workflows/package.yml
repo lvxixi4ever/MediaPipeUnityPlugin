@@ -171,7 +171,7 @@ jobs:
         run: |
           docker run --rm --cpus=2 --memory=8g ^
             --mount type=bind,src=%CD%\Assets,dst=C:\mediapipe\Packages ^
-            --mount type=bind,src=%CD%\Assets,dst=F:\UnityNew\UnityProject\MediaPipeUsing1\Assets ^
+            --mount type=bind,src=%CD%\Assets,dst=C:\mediapipe\Assets ^
             mediapipe_unity:latest ^
             python build.py build --bazel_build_opts="${{ inputs.bazelBuildArgs }}" ${{ inputs.windowsBuildArgs }} -vv
         shell: cmd
